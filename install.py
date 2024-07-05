@@ -48,7 +48,7 @@ def _write_script(path, content):
     with open(path, 'w') as file:
         file.write(content)
     os.system('chmod +x {}'.format(path))
-    
+
 def make_launcher(app, container, bindir, 
                   bind='', exe=None):
     '''Configure and install a launcher.
@@ -160,7 +160,7 @@ if __name__ == "__main__":
     # set apptainer cache directory to tmp so that we don't fill up home directory
     img = args.container
     version_docker = args.version
-    tmp_dir = args.tmp_dir
+    tmp_dir = args.tmpdir
     os.environ["APPTAINER_CACHEDIR"] = tmp_dir
     container = '{}/{}-{}.sif'.format(tmp_dir, img, version_docker)
     if not os.path.exists(container) or args.force:
