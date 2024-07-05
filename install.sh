@@ -532,29 +532,7 @@ case ${OS} in
     if [ "$CPU" = "arm64" ]; then
       install_docker
     else
-      if command -v singularity &> /dev/null && command -v podman &> /dev/null; then
-          echo "Both Singularity and Podman are available."
-          read -p "Choose which one to install (0 for Singularity, 1 for Podman): " choice
-          if [ -z "$CHOICE" ]; then
-            read -p "Choose which one to install (0 for Singularity, 1 for Podman): " choice
-          else
-            choice=$CHOICE
-          fi
-          case "$choice" in
-            0)
-              install_singularity
-              ;;
-            1)
-              install_podman
-              ;;
-            *)
-              echo "Invalid choice. Exiting."
-              exit 1
-              ;;
-          esac
-      else
-          install_singularity
-        fi
+      install_singularity
     fi
     ;;
   Darwin)
@@ -568,5 +546,7 @@ case ${OS} in
     ;;
 esac
 
+popd
 echo "Environment setup succesfull"
-echo "You can start the development environment by running './lad-shell'"
+echo "You can start the development environment by running './lad4174
+-shell'"
