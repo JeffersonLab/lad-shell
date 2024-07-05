@@ -10,7 +10,7 @@
 CONTAINER="ladlib"
 VERSION="main"
 PREFIX="$PWD"
-
+DOCKER_PREFIX="docker://apanta123" #jeffersonlab"
 function print_the_help {
   echo "USAGE:  ./install.sh [-p PREFIX] [-v VERSION]"
   echo "OPTIONAL ARGUMENTS:"
@@ -77,7 +77,7 @@ if [ ! -d $PREFIX ]; then
   exit 1
 fi
 
-echo "Setting up development environment for apanta123/$CONTAINER:$VERSION"
+echo "Setting up development environment for $DOCKER_PREFIX/$CONTAINER:$VERSION"
 
 mkdir -p $PREFIX/local/lib || exit 1
 
@@ -94,11 +94,8 @@ function install_singularity() {
     fi
   fi
   if [ -z $SINGULARITY ]; then
-    ## first priority: a known good install (this one is on JLAB)
-    if [ -d "/apps/singularity/3.7.1/bin/" ]; then
-      SINGULARITY="/apps/singularity/3.7.1/bin/singularity"
-    ## whatever is in the path is next
-    elif [ $(type -P singularity ) ]; then
+    ## whatever is in the path
+    if [ $(type -P singularity ) ]; then
       SINGULARITY=$(which singularity)
     ## cvmfs singularity is last resort (sandbox mode can cause issues)
     elif [ -f "/cvmfs/oasis.opensciencegrid.org/mis/singularity/bin/singularity" ]; then
@@ -121,7 +118,7 @@ function install_singularity() {
     echo "Attempting last-resort singularity pull for old image"
     echo "This may take a few minutes..."
     INSIF=`basename ${SIF}`
-    singularity pull --name "${INSIF}" docker://apanta123/$CONTAINER:$VERSION
+    singularity pull --name "${INSIF}" $DOCKER_PREFIX/$CONTAINER:$VERSION
     mv ${INSIF} $SIF
     chmod +x ${SIF}
     unset INSIF
@@ -129,14 +126,16 @@ function install_singularity() {
   else
     ## check if we can just use local image in PREFIX/local/lib
     SIF="$PREFIX/local/lib/${CONTAINER}-${VERSION}.sif"
-    if [ -z "$DISABLE_CVMFS_USAGE" -a -d /cvmfs/singularity.opensciencegrid.org/eicweb/${CONTAINER}:${VERSION} ]; then
+    if [ -z "$DISABLE_CVMFS_USAGE" -a -d /cvmfs/oasis.opensciencegrid.org/jlab/hallc/lad/${CONTAINER}:${VERSION} ]; then
+      echo "Using image form CVMFS"
       SIF="$PREFIX/local/lib/${CONTAINER}-${VERSION}"
       ## need to cleanup in this case, else it will try to make a subdirectory
       rm -rf ${SIF}
       ln -sf /cvmfs/singularity.opensciencegrid.org/${CONTAINER}:${VERSION} ${SIF}
     ## check if we have an jlab deployed image. #TODO replace with work lad directory
-    elif [ -f /u/home/panta/ladimg/${CONTAINER}-${VERSION}.sif ]; then
-      ln -sf /u/home/panta/ladimg/${CONTAINER}-${VERSION}.sif ${SIF}
+    elif [ -f /work/hallc/c-lad/containers/${CONTAINER}-${VERSION}.sif ]; then
+      echo "Using image form /work/hallc/c-lad/containers"
+      ln -sf /work/hallc/c-lad/containers/${CONTAINER}-${VERSION}.sif ${SIF}
     ## if not, download the container to the system
     else
       ## get the python installer and run the old-style install
@@ -293,7 +292,7 @@ function install_docker() {
   fi
   echo " - Found docker at ${DOCKER}"
 
-  IMG=apanta123/${CONTAINER}:${VERSION}
+  IMG=$DOCKER_PREFIX/${CONTAINER}:${VERSION}
   docker pull ${IMG}
   echo " - Deployed ${CONTAINER} image: ${IMG}"
 
@@ -408,12 +407,12 @@ function install_podman() {
   ## check for docker install
   PODMAN=$(which podman)
   if [ -z ${DOCKER} ]; then
-    echo "ERROR: no docker install found, docker is required for the docker-based install"
+    echo "ERROR: no podman install found, podman is required for the podman-based install"
   fi
-  echo " - Found docker at ${PODMAN}"
+  echo " - Found podman at ${PODMAN}"
 
-  IMG=apanta123/${CONTAINER}:${VERSION}
-  docker pull ${IMG}
+  IMG=$DOCKER_PREFIX/${CONTAINER}:${VERSION}
+  podman pull ${IMG}
   echo " - Deployed ${CONTAINER} image: ${IMG}"
 
   ## We want to make sure the root directory of the install directory
@@ -533,7 +532,23 @@ case ${OS} in
     if [ "$CPU" = "arm64" ]; then
       install_docker
     else
-      install_singularity
+      if command -v singularity &> /dev/null && command -v podman &> /dev/null; then
+          echo "Both Singularity and Podman are available."
+          read -p "Choose which one to install (0 for Singularity, 1 for Podman): " choice
+          case "$choice" in
+            0)
+              install_singularity
+              ;;
+            1)
+              install_podman
+              ;;
+            *)
+              echo "Invalid choice. Exiting."
+              exit 1
+              ;;
+          esac
+      else
+          install_singularity
     fi
     ;;
   Darwin)

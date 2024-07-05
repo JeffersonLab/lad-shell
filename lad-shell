@@ -1,0 +1,69 @@
+#!/bin/bash
+
+## capture environment setup for upgrades
+CONTAINER=ladlib
+TMPDIR=/var/folders/nc/qsft00k13gn88w11mmx5wl0c000b93/T/
+VERSION=main
+PREFIX=/Users/panta/lad-shell
+DISABLE_CVMFS_USAGE=
+
+function print_the_help {
+  echo "USAGE:  ./lad-shell [OPTIONS] [ -- COMMAND ]"
+  echo "OPTIONAL ARGUMENTS:"
+  echo "          -u,--upgrade    Upgrade the container to the latest version"
+  echo "          --noX           Disable X11 forwarding on macOS"
+  echo "          -h,--help       Print this message"
+  echo ""
+  echo "  Start the lad-shell containerized software environment (Docker version)."
+  echo ""
+  echo "EXAMPLES: "
+  echo "  - Start an interactive shell: ./lad-shell" 
+  echo "  - Upgrade the container:      ./lad-shell --upgrade"
+  echo "  - Execute a single command:   ./lad-shell -- <COMMAND>"
+  echo ""
+  exit
+}
+
+UPGRADE=
+NOX=
+while [ $# -gt 0 ]; do
+  key=$1
+  case $key in
+    -u|--upgrade)
+      UPGRADE=1
+      shift
+      ;;
+    --noX)
+      NOX=1
+      shift
+      ;;
+     -h|--help)
+      print_the_help
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      echo "ERROR: unknown argument: $key"
+      echo "use --help for more info"
+      exit 1
+      ;;
+  esac
+done
+
+if [ ! -z ${UPGRADE} ]; then
+  echo "Upgrading lad-shell..."
+  docker pull apanta123/ladlib:main || exit 1
+  echo "lad-shell upgrade sucessful"
+  exit 0
+fi
+if [ ! ${NOX} ]; then
+ nolisten=`defaults find nolisten_tcp | grep nolisten | head -n 1 | awk  '{print $3}' |cut -b 1 `
+ [[ $nolisten -ne 0 ]] && echo "For X support: In XQuartz settings --> Security --> enable \"Allow connections from network clients\" and restart (should be only once)."
+  xhost +localhost
+  dispnum=`ps -e |grep Xquartz | grep listen | grep -v xinit |awk  '{print $5}' `
+  XSTUFF="-e DISPLAY=host.docker.internal${dispnum} -v /tmp/.X11-unix:/tmp/.X11-unix"
+fi
+docker run --platform linux/amd64  -v /Volumes:/Volumes -v /Users:/Users -v /tmp:/tmp $XSTUFF -w=/Users/panta/lad-shell -it --rm -e LAD_SHELL_PREFIX=/Users/panta/lad-shell/local apanta123/ladlib:main lad-shell $@
