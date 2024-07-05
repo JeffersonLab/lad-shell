@@ -535,6 +535,11 @@ case ${OS} in
       if command -v singularity &> /dev/null && command -v podman &> /dev/null; then
           echo "Both Singularity and Podman are available."
           read -p "Choose which one to install (0 for Singularity, 1 for Podman): " choice
+          if [ -z "$CHOICE" ]; then
+            read -p "Choose which one to install (0 for Singularity, 1 for Podman): " choice
+          else
+            choice=$CHOICE
+          fi
           case "$choice" in
             0)
               install_singularity
