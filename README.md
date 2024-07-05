@@ -36,8 +36,7 @@ if you want to install default container in single line (i.e. `main`)
 curl -L https://raw.githubusercontent.com/JeffersonLab/lad-shell/main/install.sh | bash
 ```
 
-3. You can now load your development environment by executing the `eic-shell` script that
-   is in your top-level working directory.
+3. Install script creates a executable file `lad-shell`. Excecute the following to get into the lad-shell cotainer environment.
 ```bash
 ./lad-shell
 ```
