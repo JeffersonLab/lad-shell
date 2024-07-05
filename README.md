@@ -19,7 +19,7 @@ cd $HOME/lad
 2. Execute the following line in your terminal to setup your environment in this directory
    to install the latest stable container
 ```bash
-curl -L https://raw.githubusercontent.com/panta-123/lad-shell/main/install.sh | bash
+curl -L https://raw.githubusercontent.com/JeffersonLab/lad-shell/main/install.sh| bash
 ```
 
 3. You can now load your development environment by executing the `eic-shell` script that
@@ -37,4 +37,3 @@ Included software:
 ------------------
   - Included software (for the exact versions, use the command `lad-info` inside the container):
 
-    
