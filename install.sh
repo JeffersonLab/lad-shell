@@ -268,7 +268,7 @@ if [ ! -z \${UPGRADE} ]; then
   if [ ! -z \${DISABLE_CVMFS_USAGE} ]; then
     FLAGS="\${FLAGS} --no-cvmfs"
   fi
-  curl -L https://github.com/panta-123/lad-shell/raw/main/install.sh \
+  curl -L https://raw.githubusercontent.com/JeffersonLab/lad-shell/main/install.sh \
     | bash -s -- \${FLAGS}
   echo "lad-shell upgrade sucessful"
   exit 0
@@ -549,6 +549,7 @@ case ${OS} in
           esac
       else
           install_singularity
+        fi
     fi
     ;;
   Darwin)
@@ -562,6 +563,5 @@ case ${OS} in
     ;;
 esac
 
-popd
 echo "Environment setup succesfull"
 echo "You can start the development environment by running './lad-shell'"
