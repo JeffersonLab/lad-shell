@@ -10,7 +10,7 @@
 CONTAINER="ladlib"
 VERSION="main"
 PREFIX="$PWD"
-DOCKER_PREFIX="docker://apanta123" #jeffersonlab"
+DOCKER_PREFIX="apanta123" #jeffersonlab"
 function print_the_help {
   echo "USAGE:  ./install.sh [-p PREFIX] [-v VERSION]"
   echo "OPTIONAL ARGUMENTS:"
@@ -411,7 +411,7 @@ function install_podman() {
   fi
   echo " - Found podman at ${PODMAN}"
 
-  IMG=$DOCKER_PREFIX/${CONTAINER}:${VERSION}
+  IMG=docker://$DOCKER_PREFIX/${CONTAINER}:${VERSION}
   podman pull ${IMG}
   echo " - Deployed ${CONTAINER} image: ${IMG}"
 
@@ -548,5 +548,4 @@ esac
 
 popd
 echo "Environment setup succesfull"
-echo "You can start the development environment by running './lad4174
--shell'"
+echo "You can start the development environment by running './lad-shell'"
