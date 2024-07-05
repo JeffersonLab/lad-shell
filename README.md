@@ -19,6 +19,11 @@ cd $HOME/lad
 2. Execute the following line in your terminal to setup your environment in this directory
    to install the latest stable container
 ```bash
+wget -o https://raw.githubusercontent.com/JeffersonLab/lad-shell/main/install.sh
+./install.sh
+```
+OR if you want to install default container (i.e. main)
+```bash
 curl -L https://raw.githubusercontent.com/JeffersonLab/lad-shell/main/install.sh | bash
 ```
 
