@@ -45,8 +45,5 @@ curl -L https://raw.githubusercontent.com/JeffersonLab/lad-shell/main/install.sh
    internal prefix `$LAD_SHELL_PREFIX`
 
 
-
-Included software:
-------------------
-  - Included software (for the exact versions, use the command `lad-info` inside the container):
+NOTE: This is inspired from : https://github.com/eic/eic-shell/tree/main
 
