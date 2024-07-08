@@ -24,7 +24,7 @@ To install execute:
 ```bash
 ./install
 ```
-By defult install scirpt install `main` tag container.
+By default install scirpt install `main` tag container.
 
 To specify the specific release of the container do following.
 ```bash
@@ -36,7 +36,7 @@ if you want to install default container in single line (i.e. `main`)
 curl -L https://raw.githubusercontent.com/JeffersonLab/lad-shell/main/install.sh | bash
 ```
 
-3. Install script creates a executable file `lad-shell`. Excecute the following to get into the lad-shell cotainer environment.
+3. Install script creates a executable file `lad-shell`. Excecute the following to get into the lad-shell container environment.
 ```bash
 ./lad-shell
 ```
