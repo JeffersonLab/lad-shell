@@ -20,6 +20,11 @@ cd $HOME/lad
 ```bash
 wget  https://raw.githubusercontent.com/JeffersonLab/lad-shell/main/install.sh
 ```
+make the file executable:
+```bash
+chmod +x install.sh
+```
+
 To install execute:
 ```bash
 ./install.sh
