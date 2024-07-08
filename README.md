@@ -18,7 +18,7 @@ cd $HOME/lad
 
 2. Execute the following line in your terminal to get the install script.
 ```bash
-wget -o https://raw.githubusercontent.com/JeffersonLab/lad-shell/main/install.sh
+wget  https://raw.githubusercontent.com/JeffersonLab/lad-shell/main/install.sh
 ```
 To install execute:
 ```bash
