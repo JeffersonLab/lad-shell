@@ -22,13 +22,13 @@ wget -o https://raw.githubusercontent.com/JeffersonLab/lad-shell/main/install.sh
 ```
 To install execute:
 ```bash
-./install
+./install.sh
 ```
 By default install scirpt install `main` tag container.
 
 To specify the specific release of the container do following.
 ```bash
-./install --version <tag>
+./install.sh --version <tag>
 ```
 OR 
 if you want to install default container in single line (i.e. `main`)
